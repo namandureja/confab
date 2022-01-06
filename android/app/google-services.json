@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "396099734441",
+    "project_id": "confab-dx2",
+    "storage_bucket": "confab-dx2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:396099734441:android:d376ac91276e4c811892b8",
+        "android_client_info": {
+          "package_name": "com.confab.confab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "396099734441-gep2487ffakp3rrljvgtn4qgmiubegtn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmkIv-oYet57RdElsXSnIyErdfMZzFXZM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "396099734441-gep2487ffakp3rrljvgtn4qgmiubegtn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
