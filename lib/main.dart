@@ -3,10 +3,12 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:confab/colors.dart';
 import 'package:confab/form.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/scheduler.dart';
@@ -16,15 +18,17 @@ void main() {
   runApp(const MyApp());
 }
 
-late var curQuestion = "";
+late var curQuestion = {};
 late var curTip = "";
-
+late var curCateg = "";
 var allQues = [];
 var smallQues = [];
 var casualQues = [];
 var deepQues = [];
 var partyQues = [];
-var tips = [];
+var tips = {};
+var ques = {};
+var categs = ["small", "casual", "deep", "party"];
 final bgColorsArray = [
   CustomColors.bg1,
   CustomColors.bg2,
@@ -81,12 +85,16 @@ class _AppState extends State<App> with TickerProviderStateMixin {
   void navigate() {
     _controller.forward();
     Timer(Duration(milliseconds: 400), () {
-      if (mounted) Navigator.pushReplacement(context, createRoute(Home()));
+      if (mounted) Navigator.pushReplacement(context, createRoute(Home(), 400));
     });
   }
 
   late AnimationController _controller;
   late Animation<double> _animation;
+
+  void getTip() {
+    curTip = tips[curCateg][Random().nextInt(tips[curCateg].length)];
+  }
 
   @override
   void initState() {
@@ -119,6 +127,7 @@ class _AppState extends State<App> with TickerProviderStateMixin {
           future: _initialization,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
+              print(snapshot.error.toString());
               return const MaterialApp(home: Text("Something Went Wrong"));
             }
 
@@ -130,14 +139,18 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                 if (querySnapshot.docs.isNotEmpty) {
                   final allData =
                       querySnapshot.docs.map((doc) => doc.data()).toList();
-                  smallQues = allData[0]['small'];
-                  casualQues = allData[0]['casual'];
-                  deepQues = allData[0]['deep'];
-                  partyQues = allData[0]['party'];
-                  tips = allData[1]['deep'];
-                  allQues = smallQues + casualQues + deepQues + partyQues;
-                  curQuestion = allQues[Random().nextInt(allQues.length)];
-                  curTip = tips[Random().nextInt(tips.length)];
+                  ques['small'] = allData[0]['small'];
+                  ques['casual'] = allData[0]['casual'];
+                  ques['deep'] = allData[0]['deep'];
+                  ques['party'] = allData[0]['party'];
+                  tips['small'] = allData[1]['small'];
+                  tips['casual'] = allData[1]['casual'];
+                  tips['deep'] = allData[1]['deep'];
+                  tips['party'] = allData[1]['party'];
+                  curCateg = categs[Random().nextInt(categs.length)];
+                  curQuestion =
+                      ques[curCateg][Random().nextInt(ques[curCateg].length)];
+                  getTip();
                   navigate();
                 }
               });
@@ -151,9 +164,9 @@ class _AppState extends State<App> with TickerProviderStateMixin {
   }
 }
 
-Route createRoute(Widget widget) {
+Route createRoute(Widget widget, var dur) {
   return PageRouteBuilder(
-    transitionDuration: Duration(milliseconds: 400),
+    transitionDuration: Duration(milliseconds: dur),
     pageBuilder: (context, animation, secondaryAnimation) => widget,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       double begin = 0;
@@ -204,60 +217,60 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with TickerProviderStateMixin {
   var questionFontSize;
-  var activeVal = 0;
+  var activeVal = 1;
   var screenWidth;
   var menuColor1 = Colors.black;
-  var menuColor2 = Colors.black38;
+  var menuColor2 = Colors.black54;
 
-  var menuColor3 = Colors.black38;
+  var menuColor3 = Colors.black54;
 
-  var menuColor4 = Colors.black38;
-  var menuColor5 = Colors.black38;
+  var menuColor4 = Colors.black54;
+  var menuColor5 = Colors.black54;
 
   void updateMenu(value) {
     switch (value) {
       case 1:
         setState(() {
           menuColor1 = Colors.black;
-          menuColor2 = Colors.black38;
-          menuColor3 = Colors.black38;
-          menuColor4 = Colors.black38;
-          menuColor5 = Colors.black38;
+          menuColor2 = Colors.black54;
+          menuColor3 = Colors.black54;
+          menuColor4 = Colors.black54;
+          menuColor5 = Colors.black54;
         });
         break;
       case 2:
         setState(() {
-          menuColor1 = Colors.black38;
+          menuColor1 = Colors.black54;
           menuColor2 = Colors.black;
-          menuColor3 = Colors.black38;
-          menuColor4 = Colors.black38;
-          menuColor5 = Colors.black38;
+          menuColor3 = Colors.black54;
+          menuColor4 = Colors.black54;
+          menuColor5 = Colors.black54;
         });
         break;
       case 3:
         setState(() {
-          menuColor1 = Colors.black38;
-          menuColor2 = Colors.black38;
+          menuColor1 = Colors.black54;
+          menuColor2 = Colors.black54;
           menuColor3 = Colors.black;
-          menuColor4 = Colors.black38;
-          menuColor5 = Colors.black38;
+          menuColor4 = Colors.black54;
+          menuColor5 = Colors.black54;
         });
         break;
       case 4:
         setState(() {
-          menuColor1 = Colors.black38;
-          menuColor2 = Colors.black38;
-          menuColor3 = Colors.black38;
+          menuColor1 = Colors.black54;
+          menuColor2 = Colors.black54;
+          menuColor3 = Colors.black54;
           menuColor4 = Colors.black;
-          menuColor5 = Colors.black38;
+          menuColor5 = Colors.black54;
         });
         break;
       case 5:
         setState(() {
-          menuColor1 = Colors.black38;
-          menuColor2 = Colors.black38;
-          menuColor3 = Colors.black38;
-          menuColor4 = Colors.black38;
+          menuColor1 = Colors.black54;
+          menuColor2 = Colors.black54;
+          menuColor3 = Colors.black54;
+          menuColor4 = Colors.black54;
           menuColor5 = Colors.black;
         });
         break;
@@ -276,43 +289,50 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   void changeTip() {
-    var prev = tips.indexOf(curTip);
+    var prev = tips[curQuestion['category']].indexOf(curTip);
     var next;
     do {
-      next = Random().nextInt(tips.length);
+      next = Random().nextInt(tips[curQuestion['category']].length);
     } while (next == prev);
     setState(() {
-      curTip = tips[next];
+      curTip = tips[curQuestion['category']][next];
     });
   }
 
-  void changeQuestion(category, gen) {
-    var array = [];
-    if (category == 2) {
-      array = smallQues;
-    } else if (category == 5) {
-      array = deepQues;
-    } else if (category == 3) {
-      array = casualQues;
-    } else if (category == 4) {
-      array = partyQues;
-    } else {
-      array = allQues;
+  void changeQuestion(val, gen) {
+    var category = "";
+    switch (val) {
+      case 1:
+        category = "all";
+        break;
+      case 2:
+        category = "small";
+        break;
+      case 3:
+        category = "casual";
+        break;
+      case 4:
+        category = 'party';
+        break;
+      case 5:
+        category = "deep";
+        break;
     }
-
-    var prev = array.indexOf(curQuestion);
+    var array = [];
+    if (category != "all") {
+      array = ques[category];
+    } else {
+      array = ques['small'] + ques['deep'] + ques['party'] + ques['casual'];
+    }
+    var prev =
+        array.indexWhere((element) => element['text'] == curQuestion['text']);
     var next;
     do {
       next = Random().nextInt(array.length);
     } while (next == prev);
     setState(() {
       curQuestion = array[next];
-
-      if (curQuestion.length < 80)
-        questionFontSize = screenWidth * 0.1;
-      else if (curQuestion.length > 80 && curQuestion.length < 90)
-        questionFontSize = screenWidth * 0.09;
-      else if (curQuestion.length > 90) questionFontSize = screenWidth * 0.085;
+      changeTip();
     });
   }
 
@@ -331,11 +351,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
     screenWidth = MediaQuery.of(context).size.width;
 
-    if (curQuestion.length < 80)
-      questionFontSize = screenWidth * 0.1;
-    else if (curQuestion.length > 80 && curQuestion.length < 90)
-      questionFontSize = screenWidth * 0.09;
-    else if (curQuestion.length > 90) questionFontSize = screenWidth * 0.085;
+    // if (curQuestion.length < 80)
+    //   questionFontSize = screenWidth * 0.1;
+    // else if (curQuestion.length > 80 && curQuestion.length < 90)
+    //   questionFontSize = screenWidth * 0.09;
+    // else if (curQuestion.length > 90) questionFontSize = screenWidth * 0.085;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -374,52 +394,51 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           activeVal = value;
                           _tabController.animateTo(value - 1);
                           changeQuestion(value, false);
-                          changeTip();
 
                           setBgColor();
                           switch (value) {
                             case 1:
                               setState(() {
                                 menuColor1 = Colors.black;
-                                menuColor2 = Colors.black38;
-                                menuColor3 = Colors.black38;
-                                menuColor4 = Colors.black38;
-                                menuColor5 = Colors.black38;
+                                menuColor2 = Colors.black54;
+                                menuColor3 = Colors.black54;
+                                menuColor4 = Colors.black54;
+                                menuColor5 = Colors.black54;
                               });
                               break;
                             case 2:
                               setState(() {
-                                menuColor1 = Colors.black38;
+                                menuColor1 = Colors.black54;
                                 menuColor2 = Colors.black;
-                                menuColor3 = Colors.black38;
-                                menuColor4 = Colors.black38;
-                                menuColor5 = Colors.black38;
+                                menuColor3 = Colors.black54;
+                                menuColor4 = Colors.black54;
+                                menuColor5 = Colors.black54;
                               });
                               break;
                             case 3:
                               setState(() {
-                                menuColor1 = Colors.black38;
-                                menuColor2 = Colors.black38;
+                                menuColor1 = Colors.black54;
+                                menuColor2 = Colors.black54;
                                 menuColor3 = Colors.black;
-                                menuColor4 = Colors.black38;
-                                menuColor5 = Colors.black38;
+                                menuColor4 = Colors.black54;
+                                menuColor5 = Colors.black54;
                               });
                               break;
                             case 4:
                               setState(() {
-                                menuColor1 = Colors.black38;
-                                menuColor2 = Colors.black38;
-                                menuColor3 = Colors.black38;
+                                menuColor1 = Colors.black54;
+                                menuColor2 = Colors.black54;
+                                menuColor3 = Colors.black54;
                                 menuColor4 = Colors.black;
-                                menuColor5 = Colors.black38;
+                                menuColor5 = Colors.black54;
                               });
                               break;
                             case 5:
                               setState(() {
-                                menuColor1 = Colors.black38;
-                                menuColor2 = Colors.black38;
-                                menuColor3 = Colors.black38;
-                                menuColor4 = Colors.black38;
+                                menuColor1 = Colors.black54;
+                                menuColor2 = Colors.black54;
+                                menuColor3 = Colors.black54;
+                                menuColor4 = Colors.black54;
                                 menuColor5 = Colors.black;
                               });
                               break;
@@ -522,7 +541,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                 if (value == (activeVal - 1)) return;
                                 activeVal = value + 1;
                                 changeQuestion(value + 1, false);
-                                changeTip();
 
                                 setBgColor();
                                 updateMenu(value + 1);
@@ -597,14 +615,15 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(
-                              (curQuestion),
+                            AutoSizeText(
+                              (curQuestion['text']),
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                   height: 1.5,
                                   fontWeight: FontWeight.w700,
-                                  fontSize: questionFontSize,
+                                  fontSize: screenWidth * 0.1,
                                   color: Colors.white),
+                              maxLines: 5,
                             ),
                             SizedBox(
                               height: 20,
@@ -639,8 +658,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       child: ElevatedButton(
                         onPressed: () {
                           setBgColor();
+                          HapticFeedback.vibrate();
                           changeQuestion(activeVal, true);
-                          changeTip();
                         },
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -670,9 +689,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     ),
                     GestureDetector(
                         onTap: () => {
-                              Navigator.of(context).push(createRoute(FormPage(
-                                stateValue: 0,
-                              )))
+                              Navigator.of(context).push(createRoute(
+                                  FormPage(
+                                    stateValue: 0,
+                                  ),
+                                  400))
                             },
                         child: Container(
                           width: screenWidth,

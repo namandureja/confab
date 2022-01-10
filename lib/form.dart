@@ -33,11 +33,11 @@ class _FormPageState extends State<FormPage> {
       setState(() {
         isVisible = false;
       });
-      Navigator.of(context).pushReplacement(createRoute(SuccessPage()));
+      Navigator.of(context).pushReplacement(createRoute(SuccessPage(), 400));
     }).catchError((error) => {});
   }
 
-  String? selectedValue = "Casual";
+  String? selectedValue;
   List<String> items = ['Casual', 'Small Talk', 'Deep', 'Party'];
   TextEditingController qController = new TextEditingController();
 
@@ -50,7 +50,7 @@ class _FormPageState extends State<FormPage> {
       if (items.indexOf(item) == index)
         color = Colors.black;
       else
-        color = Colors.black38;
+        color = Colors.black45;
       _menuItems.add(DropdownMenuItem<String>(
         value: item,
         child: Text(
@@ -175,6 +175,16 @@ class _FormPageState extends State<FormPage> {
                             ),
                             DropdownButtonHideUnderline(
                               child: DropdownButton2(
+                                hint: DropdownMenuItem<String>(
+                                  value: "Select a category",
+                                  child: Text(
+                                    "Select a category",
+                                    style: TextStyle(
+                                        fontSize: screenWidth * 0.046,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black45),
+                                  ),
+                                ),
                                 icon: Icon(
                                   Icons.keyboard_arrow_down_rounded,
                                   size: 25,
@@ -255,7 +265,8 @@ class _FormPageState extends State<FormPage> {
                             Container(
                               child: ElevatedButton(
                                 onPressed: () {
-                                  if (qController.text.isNotEmpty) {
+                                  if (qController.text.isNotEmpty &&
+                                      selectedValue != null) {
                                     setState(() {
                                       isVisible = true;
                                       isError = false;
@@ -351,7 +362,7 @@ class _SuccessPageState extends State<SuccessPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-      Timer(Duration(milliseconds: 300), () {
+      Timer(Duration(milliseconds: 400), () {
         setState(() {
           opacity = 1;
         });
@@ -457,7 +468,7 @@ class _SuccessPageState extends State<SuccessPage> {
                           });
                           Timer(Duration(milliseconds: 400), () {
                             Navigator.of(context).pushReplacement(
-                                createRoute(FormPage(stateValue: 1)));
+                                createRoute(FormPage(stateValue: 1), 400));
                           });
                         },
                         child: Text(
