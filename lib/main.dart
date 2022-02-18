@@ -99,22 +99,22 @@ class _AppState extends State<App> with TickerProviderStateMixin {
     curTip = tips[curCateg][Random().nextInt(tips[curCateg].length)];
   }
 
-  Future<bool> internetStatus() async {
-    bool hasConnection;
-    try {
-      await FirebaseFirestore.instance
-          .runTransaction((Transaction tx) {})
-          .timeout(Duration(seconds: 5));
-      hasConnection = true;
-    } on PlatformException catch (_) {
-      hasConnection = false;
-    } on TimeoutException catch (_) {
-      hasConnection = false;
-    } catch (_) {
-      hasConnection = false;
-    }
-    return hasConnection;
-  }
+  // Future<bool> internetStatus() async {
+  //   bool hasConnection;
+  //   try {
+  //     await FirebaseFirestore.instance
+  //         .runTransaction((Transaction tx) {})
+  //         .timeout(Duration(seconds: 5));
+  //     hasConnection = true;
+  //   } on PlatformException catch (_) {
+  //     hasConnection = false;
+  //   } on TimeoutException catch (_) {
+  //     hasConnection = false;
+  //   } catch (_) {
+  //     hasConnection = false;
+  //   }
+  //   return hasConnection;
+  // }
 
   @override
   void initState() {
@@ -152,11 +152,11 @@ class _AppState extends State<App> with TickerProviderStateMixin {
             }
 
             if (snapshot.connectionState == ConnectionState.done) {
-              internetStatus().then((value) {
-                if (!value) {
-                  print("no internet");
-                }
-              });
+              // internetStatus().then((value) {
+              //   if (!value) {
+              //     print("no internet");
+              //   }
+              // });
               FirebaseFirestore.instance
                   .collection('questions')
                   .get()
