@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:ui';
 
-import 'package:confab/colors.dart';
 import 'package:confab/main.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +31,7 @@ class _FormPageState extends State<FormPage> {
       setState(() {
         isVisible = false;
       });
-      Navigator.of(context).pushReplacement(createRoute(SuccessPage(), 400));
+      Navigator.of(context).pushReplacement(createRoute(SuccessPage(), 300));
     }).catchError((error) => {});
   }
 
@@ -102,7 +100,7 @@ class _FormPageState extends State<FormPage> {
         child: Scaffold(
             backgroundColor: bgColor,
             body: AnimatedOpacity(
-              duration: Duration(milliseconds: 300),
+              duration: Duration(milliseconds: 200),
               opacity: pageOpacity,
               child: SafeArea(
                 child: Stack(children: <Widget>[
@@ -127,7 +125,7 @@ class _FormPageState extends State<FormPage> {
                                     setState(() {
                                       pageOpacity = 0;
                                     });
-                                    Timer(Duration(milliseconds: 350), () {
+                                    Timer(Duration(milliseconds: 250), () {
                                       Navigator.pop(context, false);
                                     });
                                   },
@@ -250,7 +248,7 @@ class _FormPageState extends State<FormPage> {
                                 style: TextStyle(
                                     fontSize: screenWidth * 0.055,
                                     color: Colors.black),
-                                maxLines: 6,
+                                maxLines: 10,
                                 decoration: new InputDecoration.collapsed(
                                     hintStyle: TextStyle(
                                         fontSize: screenWidth * 0.055,
@@ -362,7 +360,7 @@ class _SuccessPageState extends State<SuccessPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-      Timer(Duration(milliseconds: 400), () {
+      Timer(Duration(milliseconds: 300), () {
         setState(() {
           opacity = 1;
         });
@@ -377,7 +375,7 @@ class _SuccessPageState extends State<SuccessPage> {
         setState(() {
           opacity = 0;
         });
-        Timer(Duration(milliseconds: 400), () {
+        Timer(Duration(milliseconds: 300), () {
           Navigator.pop(context, false);
         });
 
@@ -386,7 +384,7 @@ class _SuccessPageState extends State<SuccessPage> {
       child: Scaffold(
         backgroundColor: bgColor,
         body: AnimatedOpacity(
-          duration: Duration(milliseconds: 400),
+          duration: Duration(milliseconds: 300),
           opacity: opacity,
           child: SafeArea(
               child: Stack(children: <Widget>[
@@ -466,9 +464,9 @@ class _SuccessPageState extends State<SuccessPage> {
                           setState(() {
                             opacity = 0;
                           });
-                          Timer(Duration(milliseconds: 400), () {
+                          Timer(Duration(milliseconds: 300), () {
                             Navigator.of(context).pushReplacement(
-                                createRoute(FormPage(stateValue: 1), 400));
+                                createRoute(FormPage(stateValue: 1), 300));
                           });
                         },
                         child: Text(
