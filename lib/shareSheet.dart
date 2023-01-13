@@ -1,11 +1,13 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:confab/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_social_content_share/flutter_social_content_share.dart';
+import 'package:flutter_share_me/flutter_share_me.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:social_share/social_share.dart';
 
@@ -26,20 +28,25 @@ class _shareSheetState extends State<shareSheet> {
     screenshotController
         .captureFromWidget(
             Container(
-                padding: EdgeInsets.all(padding.toDouble()),
                 width: 250,
+                // color: Colors.white,
                 height: 250,
                 child: Container(
                     padding:
                         const EdgeInsets.only(top: 10, left: 20, right: 20),
                     decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            offset: Offset.zero,
-                            blurRadius: 15,
-                            spreadRadius: 1)
-                      ],
+                      // borderRadius: BorderRadius.circular(8),
+                      // border: Border.all(
+                      //     color: Colors.white,
+                      //     width: 4,
+                      //     style: BorderStyle.solid),
+                      // adow: [
+                      //   BoxShadow(
+                      //       cboxSholor: Colors.black.withOpacity(0.2),
+                      //       offset: Offset.zero,
+                      //       blurRadius: 15,
+                      //       spreadRadius: 1)
+                      // ],
                       color: bgColor,
                     ),
                     child: Stack(children: <Widget>[
@@ -52,7 +59,7 @@ class _shareSheetState extends State<shareSheet> {
                             fontSize: curQuestion['text'].length < 30 ? 32 : 25,
                             fontFamily: 'Nunito',
                             color: Colors.white),
-                        maxLines: 5,
+                        maxLines: 4,
                       ),
                       const Align(
                           alignment: Alignment.bottomRight,
@@ -70,8 +77,8 @@ class _shareSheetState extends State<shareSheet> {
                     ]))),
             pixelRatio: pixelRatio * 2.5)
         .then((capturedImage) async {
-      final directory = await getApplicationDocumentsDirectory();
-      final imagePath = await File('${directory.path}/temp.png').create();
+      final directory = await getTemporaryDirectory();
+      final imagePath = await File('${directory.path}/confab.png').create();
       await imagePath.writeAsBytes(capturedImage);
       callback(imagePath.path);
     });
@@ -79,7 +86,11 @@ class _shareSheetState extends State<shareSheet> {
 
   void getList() async {
     list = await SocialShare.checkInstalledAppsForShare();
-    // print(list);
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -121,8 +132,22 @@ class _shareSheetState extends State<shareSheet> {
                 GestureDetector(
                     onTap: () {
                       SocialShare.copyToClipboard(
-                          "${curQuestion['text']}\n\nGenerated using Confab. Install now!\nwww.confab.ml");
+                          "${curQuestion['text']}\n\nGenerated using Confab. Install now!\nhttps://confab.me");
                       widget.pc.close();
+                      Timer(Duration(milliseconds: 500), () {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          duration: Duration(milliseconds: 1000),
+                          backgroundColor: Colors.white,
+                          content: Text(
+                            'Copied to clipboard.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontFamily: 'Lato',
+                                fontSize: 16,
+                                color: bgColor),
+                          ),
+                        ));
+                      });
                     },
                     child: const shareIcon(
                       string: "Copy to\nClipboard",
@@ -131,57 +156,65 @@ class _shareSheetState extends State<shareSheet> {
                 SizedBox(
                   height: 30,
                 ),
+                // GestureDetector(
+                //     onTap: () {
+                //       if (list!['twitter']) {
+                //         SocialShare.shareTwitter(
+                //             "${curQuestion['text']}\n\nGenerated using Confab. Install now!",
+                //             hashtags: ["confab"],
+                //             url: "https://confab.com");
+                //         widget.pc.close();
+                //       } else {
+                //         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                //           duration: Duration(milliseconds: 1000),
+                //           content: Text(
+                //             'App not installed',
+                //             textAlign: TextAlign.center,
+                //             style: TextStyle(
+                //                 fontFamily: 'Lato',
+                //                 fontSize: 16,
+                //                 color: bgColor),
+                //           ),
+                //         ));
+                //       }
+                //     },
+                //     child: shareIcon(
+                //       string: "Twitter",
+                //       url: "images/twitter.png",
+                //     )),
                 GestureDetector(
-                    onTap: () {
-                      if (list!['twitter']) {
-                        SocialShare.shareTwitter(
-                            "${curQuestion['text']}\n\nGenerated using Confab. Install now!",
-                            hashtags: ["confab"],
-                            url: "www.confab.ml");
-                        widget.pc.close();
-                      } else {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text(
-                            'App not installed',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontFamily: 'Lato', fontSize: 16),
-                          ),
-                        ));
-                      }
-                    },
-                    child: shareIcon(
-                      string: "Twitter",
-                      url: "images/twitter.png",
-                    )),
+                  onTap: () {
+                    if (list!['instagram']) {
+                      _capturePng(20, (path) {
+                        widget.call(false);
+                        FlutterShareMe().shareToInstagram(imagePath: path);
+                      });
+                      widget.pc.close();
+                      widget.call(true);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        duration: Duration(milliseconds: 1000),
+                        content: Text(
+                          'App not installed',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontFamily: 'Lato', fontSize: 16, color: bgColor),
+                        ),
+                      ));
+                    }
+                  },
+                  child: shareIcon(
+                    string: "Instagram",
+                    url: "images/instagram.png",
+                  ),
+                ),
                 SizedBox(
                   height: 30,
                 ),
-                GestureDetector(
-                    onTap: () {
-                      if (list!['telegram']) {
-                        SocialShare.shareTelegram(
-                            "${curQuestion['text']}\n\nGenerated using Confab. Install now!\nwww.confab.ml");
-                        widget.pc.close();
-                      } else {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text(
-                            'App not installed',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontFamily: 'Lato', fontSize: 16),
-                          ),
-                        ));
-                      }
-                    },
-                    child: shareIcon(
-                      string: "Telegram",
-                      url: "images/telegram.png",
-                    ))
               ],
             ),
             SizedBox(
-              width: width * 0.13,
+              width: width > 380 ? width * 0.13 : width * 0.10,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -202,12 +235,15 @@ class _shareSheetState extends State<shareSheet> {
                         widget.pc.close();
                         widget.call(true);
                       } else {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          duration: Duration(milliseconds: 1000),
                           content: Text(
                             'App not installed',
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontFamily: 'Lato', fontSize: 16),
+                            style: TextStyle(
+                                fontFamily: 'Lato',
+                                fontSize: 16,
+                                color: bgColor),
                           ),
                         ));
                       }
@@ -220,50 +256,45 @@ class _shareSheetState extends State<shareSheet> {
                   height: 30,
                 ),
                 GestureDetector(
-                  onTap: () {
-                    if (list!['instagram']) {
-                      _capturePng(0, (path) {
+                    onTap: () {
+                      _capturePng(20, (path) {
                         widget.call(false);
-                        FlutterSocialContentShare.share(
-                            type: ShareType.instagramWithImageUrl,
-                            imageUrl: path);
+                        SocialShare.shareFacebookStory(
+                                path,
+                                '#${bgColor.value.toRadixString(16)}',
+                                '#${bgColor.value.toRadixString(16)}',
+                                "https://confab.me")
+                            .then((status) {
+                          if (status == "error") {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              duration: Duration(milliseconds: 1000),
+                              backgroundColor: Colors.white,
+                              content: Text(
+                                'App not installed',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontFamily: 'Lato',
+                                    fontSize: 16,
+                                    color: bgColor),
+                              ),
+                            ));
+                          }
+                        });
                       });
                       widget.pc.close();
                       widget.call(true);
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text(
-                          'App not installed',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontFamily: 'Lato', fontSize: 16),
-                        ),
-                      ));
-                    }
-                  },
-                  child: shareIcon(
-                    string: "Instagram",
-                    url: "images/instagram.png",
-                  ),
-                ),
+                    },
+                    child: shareIcon(
+                      string: "Facebook\nStories",
+                      url: "images/facebook.png",
+                    )),
                 SizedBox(
                   height: 30,
                 ),
-                GestureDetector(
-                    onTap: () {
-                      FlutterSocialContentShare.share(
-                          type: ShareType.facebookWithoutImage,
-                          quote:
-                              "${curQuestion['text']}\n\nGenerated using Confab. Install now!",
-                          url: "wwww.confab.ml");
-                    },
-                    child: shareIcon(
-                      string: "Facebook",
-                      url: "images/facebook.png",
-                    ))
               ],
             ),
             SizedBox(
-              width: width * 0.13,
+              width: width > 380 ? width * 0.13 : width * 0.10,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -271,14 +302,25 @@ class _shareSheetState extends State<shareSheet> {
                 GestureDetector(
                   onTap: () async {
                     if (list!['whatsapp']) {
-                      SocialShare.shareWhatsapp(
-                          "${curQuestion['text']}\n\nGenerated using Confab. Install now!\nwww.confab.ml");
+                      _capturePng(0, (path) {
+                        widget.call(false);
+                        FlutterShareMe().shareToWhatsApp(
+                            imagePath: path,
+                            msg:
+                                "${curQuestion['text']}\n\nGenerated using Confab. Install now!\nhttps://confab.me");
+                      });
+                      widget.pc.close();
+                      widget.call(true);
+                      // SocialShare.shareWhatsapp(
+                      //     "${curQuestion['text']}\n\nGenerated using Confab. Install now!\nhttps://confab.com");
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        duration: Duration(milliseconds: 1000),
                         content: Text(
                           'App not installed',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontFamily: 'Lato', fontSize: 16),
+                          style: TextStyle(
+                              fontFamily: 'Lato', fontSize: 16, color: bgColor),
                         ),
                       ));
                     }
@@ -291,26 +333,26 @@ class _shareSheetState extends State<shareSheet> {
                 SizedBox(
                   height: 30,
                 ),
+                // GestureDetector(
+                //     onTap: () {
+                //       SocialShare.shareSms(
+                //           "${curQuestion['text']}\n\nGenerated using Confab. Install now!\n",
+                //           url: "https://confab.com");
+                //     },
+                //     child: shareIcon(
+                //       string: "SMS",
+                //       url: "images/sms.png",
+                //     )),
                 GestureDetector(
                     onTap: () {
-                      SocialShare.shareSms(
-                          "${curQuestion['text']}\n\nGenerated using Confab. Install now!\n",
-                          url: "www.confab.ml");
-                    },
-                    child: shareIcon(
-                      string: "SMS",
-                      url: "images/sms.png",
-                    )),
-                SizedBox(
-                  height: 30,
-                ),
-                GestureDetector(
-                    onTap: () {
-                      _capturePng(0, (path) {
+                      _capturePng(20, (path) async {
                         widget.call(false);
-                        SocialShare.shareOptions(
-                            "${curQuestion['text']}\n\nGenerated using Confab. Install now!\nwww.confab.ml",
-                            imagePath: path);
+                        Share.shareFiles(['$path'],
+                            text:
+                                "${curQuestion['text']}\n\nGenerated using Confab. Install now!\nhttps://confab.me");
+                        // SocialShare.shareOptions(
+                        //   "${curQuestion['text']}\n\nGenerated using Confab. Install now!\nhttps://confab.com",
+                        //   imagePath: path);
                       });
                       widget.call(true);
                       widget.pc.close();
@@ -318,7 +360,10 @@ class _shareSheetState extends State<shareSheet> {
                     child: shareIcon(
                       string: "More",
                       url: "images/more.png",
-                    ))
+                    )),
+                SizedBox(
+                  height: 30,
+                ),
               ],
             ),
           ],
