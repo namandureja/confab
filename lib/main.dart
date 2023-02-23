@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:confab/colors.dart';
 import 'package:confab/form.dart';
 import 'package:confab/settings.dart';
@@ -25,17 +23,17 @@ void main() {
 }
 
 late var curQuestion = {};
-late var curTip = "";
+// late var curTip = "";
 late var curCateg = "";
 var allQues = [];
 var debateQues = [];
 var casualQues = [];
 var deepQues = [];
 var partyQues = [];
-var tips = {};
+// var tips = {};
 var ques = {};
 bool haptic = true, nsfw = false, tutorial = true, tipsState = false;
-var categs = ["debate", "casual", "deep", "party"];
+var categs = ["debate", "casual", "deep", "party", "random"];
 final bgColorsArray = [
   CustomColors.bg1,
   CustomColors.bg2,
@@ -80,7 +78,7 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: '/',
         routes: {
-          '/': (context) => App(),
+          '/': (context) => const App(),
           '/home': (context) => getConstWidget(const Home()),
           '/form': (context) => getConstWidget(const FormPage(stateValue: 0)),
           '/success': (context) => getConstWidget(SuccessPage())
@@ -113,17 +111,18 @@ class _AppState extends State<App> with TickerProviderStateMixin {
   void navigate() {
     _controller.forward();
 
-    Timer(Duration(milliseconds: 400), () {
-      if (mounted) Navigator.pushReplacement(context, createRoute(Home(), 300));
+    Timer(const Duration(milliseconds: 400), () {
+      if (mounted)
+        Navigator.pushReplacement(context, createRoute(const Home(), 300));
     });
   }
 
   late AnimationController _controller;
   late Animation<double> _animation;
 
-  void getTip() {
-    curTip = tips[curCateg][Random().nextInt(tips[curCateg].length)];
-  }
+  // void getTip() {
+  //   curTip = tips[curCateg][Random().nextInt(tips[curCateg].length)];
+  // }
 
   Future<bool> hasNetwork() async {
     if (kIsWeb) {
@@ -143,8 +142,8 @@ class _AppState extends State<App> with TickerProviderStateMixin {
     double begin = 1;
     double end = 0;
     const curve = Curves.ease;
-    _controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 300));
     _animation = Tween(begin: begin, end: end)
         .chain(CurveTween(curve: curve))
         .animate(_controller);
@@ -154,15 +153,16 @@ class _AppState extends State<App> with TickerProviderStateMixin {
     final prefs = await SharedPreferences.getInstance();
 
     haptic = prefs.getBool('haptic') ?? true;
-    tipsState = prefs.getBool('tips') ?? false;
+    // tipsState = prefs.getBool('tips') ?? false;
     tutorial = prefs.getBool("tutorial") ?? true;
     nsfw = prefs.getBool("nsfw") ?? false;
-    if (!nsfw) {
-      ques['debate'] = ques['debate'].where((i) => !i['nsfw']).toList();
-      ques['casual'] = ques['casual'].where((i) => !i['nsfw']).toList();
-      ques['deep'] = ques['deep'].where((i) => !i['nsfw']).toList();
-      ques['party'] = ques['party'].where((i) => !i['nsfw']).toList();
-    }
+    // if (!nsfw) {
+    //   ques['debate'] = ques['debate'].where((i) => !i['nsfw']).toList();
+    //   ques['casual'] = ques['casual'].where((i) => !i['nsfw']).toList();
+    //   ques['deep'] = ques['deep'].where((i) => !i['nsfw']).toList();
+    //   ques['party'] = ques['party'].where((i) => !i['nsfw']).toList();
+    //   ques['random'] = ques['random'].where((i) => !i['nsfw']).toList();
+    // }
     return true;
   }
 
@@ -183,14 +183,16 @@ class _AppState extends State<App> with TickerProviderStateMixin {
               ques['casual'] = (allData[0] as dynamic)['casual'];
               ques['deep'] = (allData[0] as dynamic)['deep'];
               ques['party'] = (allData[0] as dynamic)['party'];
-              tips['debate'] = (allData[1] as dynamic)['debate'];
-              tips['casual'] = (allData[1] as dynamic)['casual'];
-              tips['deep'] = (allData[1] as dynamic)['deep'];
-              tips['party'] = (allData[1] as dynamic)['party'];
+              ques['random'] = (allData[0] as dynamic)['random'];
+              // tips['debate'] = (allData[1] as dynamic)['debate'];
+              // tips['casual'] = (allData[1] as dynamic)['casual'];
+              // tips['deep'] = (allData[1] as dynamic)['deep'];
+              // tips['party'] = (allData[1] as dynamic)['party'];
+              // tips['random'] = (allData[1] as dynamic)['random'];
               curCateg = categs[Random().nextInt(categs.length)];
               curQuestion =
                   ques[curCateg][Random().nextInt(ques[curCateg].length)];
-              getTip();
+              // getTip();
               getPref().then((bool success) {
                 navigate();
               });
@@ -213,14 +215,16 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                 ques['casual'] = (allData[0] as dynamic)['casual'];
                 ques['deep'] = (allData[0] as dynamic)['deep'];
                 ques['party'] = (allData[0] as dynamic)['party'];
-                tips['debate'] = (allData[1] as dynamic)['debate'];
-                tips['casual'] = (allData[1] as dynamic)['casual'];
-                tips['deep'] = (allData[1] as dynamic)['deep'];
-                tips['party'] = (allData[1] as dynamic)['party'];
+                ques['random'] = (allData[0] as dynamic)['random'];
+                // tips['debate'] = (allData[1] as dynamic)['debate'];
+                // tips['casual'] = (allData[1] as dynamic)['casual'];
+                // tips['deep'] = (allData[1] as dynamic)['deep'];
+                // tips['random'] = (allData[1] as dynamic)['random'];
+                // tips['party'] = (allData[1] as dynamic)['party'];
                 curCateg = categs[Random().nextInt(categs.length)];
                 curQuestion =
                     ques[curCateg][Random().nextInt(ques[curCateg].length)];
-                getTip();
+                // getTip();
                 final prefs = await SharedPreferences.getInstance();
                 if (prefs.getBool("hello") == null) {
                   await prefs.setBool("hello", true);
@@ -235,12 +239,13 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                 context: context,
                 builder: (context) => AnimatedOpacity(
                       opacity: 1,
-                      duration: Duration(milliseconds: 400),
+                      duration: const Duration(milliseconds: 400),
                       child: Container(
                           color: Colors.black26,
                           child: Center(
                             child: Container(
-                              padding: EdgeInsets.only(bottom: 28, top: 24),
+                              padding:
+                                  const EdgeInsets.only(bottom: 28, top: 24),
                               width: screenWidth * 0.9,
                               decoration: BoxDecoration(
                                   color: Colors.white,
@@ -254,10 +259,10 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                                     color: bgColor,
                                     size: 45,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
-                                  Text(
+                                  const Text(
                                     'Unable to load questions',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
@@ -267,10 +272,10 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                                         fontSize: 23.0,
                                         decoration: TextDecoration.none),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
-                                  Text(
+                                  const Text(
                                     'Please check your internet\nconnection.',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
@@ -280,7 +285,7 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                                         fontSize: 19.0,
                                         decoration: TextDecoration.none),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 25,
                                   ),
                                   GestureDetector(
@@ -293,9 +298,9 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                                           color: bgColor,
                                           borderRadius:
                                               BorderRadius.circular(14)),
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                           horizontal: 40, vertical: 9),
-                                      child: Text(
+                                      child: const Text(
                                         'Retry',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
@@ -320,12 +325,12 @@ class _AppState extends State<App> with TickerProviderStateMixin {
             context: context,
             builder: (context) => AnimatedOpacity(
                   opacity: 1,
-                  duration: Duration(milliseconds: 400),
+                  duration: const Duration(milliseconds: 400),
                   child: Container(
                       color: Colors.black26,
                       child: Center(
                         child: Container(
-                          padding: EdgeInsets.only(bottom: 28, top: 24),
+                          padding: const EdgeInsets.only(bottom: 28, top: 24),
                           width: screenWidth * 0.9,
                           decoration: BoxDecoration(
                               color: Colors.white,
@@ -339,10 +344,10 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                                 color: bgColor,
                                 size: 45,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
-                              Text(
+                              const Text(
                                 'Unable to load questions',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -352,10 +357,10 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                                     fontSize: 23.0,
                                     decoration: TextDecoration.none),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
-                              Text(
+                              const Text(
                                 'Please check your internet\nconnection.',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -365,7 +370,7 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                                     fontSize: 19.0,
                                     decoration: TextDecoration.none),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 25,
                               ),
                               GestureDetector(
@@ -376,9 +381,9 @@ class _AppState extends State<App> with TickerProviderStateMixin {
                                   decoration: BoxDecoration(
                                       color: bgColor,
                                       borderRadius: BorderRadius.circular(14)),
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                       horizontal: 40, vertical: 9),
-                                  child: Text(
+                                  child: const Text(
                                     'Retry',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
@@ -403,7 +408,6 @@ class _AppState extends State<App> with TickerProviderStateMixin {
   late Future showError;
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _controller.dispose();
   }
@@ -413,7 +417,8 @@ class _AppState extends State<App> with TickerProviderStateMixin {
     setupApp();
     return Scaffold(
       backgroundColor: bgColor,
-      body: FadeTransition(opacity: _animation, child: SplashScreenCustom()),
+      body: FadeTransition(
+          opacity: _animation, child: const SplashScreenCustom()),
     );
   }
 }
@@ -448,7 +453,7 @@ class SplashScreenCustom extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
+      children: const <Widget>[
         SizedBox(
           width: double.infinity,
         ),
@@ -488,6 +493,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   };
   var menuColor4 = Colors.black54;
   var menuColor5 = Colors.black54;
+  var menuColor6 = Colors.black54;
+
   void generatePressed() {
     setBgColor();
     if (haptic) HapticFeedback.lightImpact();
@@ -501,6 +508,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           menuColor1 = Colors.black;
           menuColor2 = Colors.black54;
           menuColor3 = Colors.black54;
+          menuColor6 = Colors.black54;
           menuColor4 = Colors.black54;
           menuColor5 = Colors.black54;
         });
@@ -510,6 +518,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           menuColor1 = Colors.black54;
           menuColor2 = Colors.black;
           menuColor3 = Colors.black54;
+          menuColor6 = Colors.black54;
           menuColor4 = Colors.black54;
           menuColor5 = Colors.black54;
         });
@@ -521,6 +530,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           menuColor3 = Colors.black;
           menuColor4 = Colors.black54;
           menuColor5 = Colors.black54;
+          menuColor6 = Colors.black54;
         });
         break;
       case 4:
@@ -530,6 +540,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           menuColor3 = Colors.black54;
           menuColor4 = Colors.black;
           menuColor5 = Colors.black54;
+          menuColor6 = Colors.black54;
         });
         break;
       case 5:
@@ -539,6 +550,17 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           menuColor3 = Colors.black54;
           menuColor4 = Colors.black54;
           menuColor5 = Colors.black;
+          menuColor6 = Colors.black54;
+        });
+        break;
+      case 6:
+        setState(() {
+          menuColor1 = Colors.black54;
+          menuColor2 = Colors.black54;
+          menuColor3 = Colors.black54;
+          menuColor4 = Colors.black54;
+          menuColor5 = Colors.black54;
+          menuColor6 = Colors.black;
         });
         break;
     }
@@ -555,17 +577,16 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     });
   }
 
-  void changeTip() {
-    var prev = tips[curQuestion['category']].indexOf(curTip);
-    var next;
-
-    do {
-      next = Random().nextInt(tips[curQuestion['category']].length);
-    } while (next == prev);
-    setState(() {
-      curTip = tips[curQuestion['category']][next];
-    });
-  }
+  // void changeTip() {
+  //   var prev = tips[curQuestion['category']].indexOf(curTip);
+  //   var next;
+  //   do {
+  //     next = Random().nextInt(tips[curQuestion['category']].length);
+  //   } while (next == prev);
+  //   setState(() {
+  //     curTip = tips[curQuestion['category']][next];
+  //   });
+  // }
 
   void changeQuestion(val, gen) {
     var category = "";
@@ -585,22 +606,29 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       case 5:
         category = "deep";
         break;
+      case 6:
+        category = "random";
+        break;
     }
     var array = [];
     if (category != "all") {
       array = ques[category];
     } else {
-      array = ques['debate'] + ques['deep'] + ques['party'] + ques['casual'];
+      array = ques['debate'] +
+          ques['deep'] +
+          ques['party'] +
+          ques['casual'] +
+          ques['random'];
     }
     var prev =
         array.indexWhere((element) => element['text'] == curQuestion['text']);
     var next;
     do {
       next = Random().nextInt(array.length);
-    } while (next == prev);
+    } while (next == prev || (array[next]['nsfw'] && !nsfw));
     setState(() {
       curQuestion = array[next];
-      changeTip();
+      // changeTip();
     });
   }
 
@@ -629,7 +657,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!networkStatus) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          duration: Duration(milliseconds: 1500),
+          duration: const Duration(milliseconds: 1500),
           backgroundColor: Colors.white,
           content: Text(
             'Please check your internet connection.',
@@ -640,7 +668,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       }
     });
     timeDilation = 2;
-    _tabController = TabController(length: 5, vsync: this);
+    _tabController = TabController(length: 6, vsync: this);
   }
 
   final myScrollController = ScrollController();
@@ -652,12 +680,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     screenWidth = MediaQuery.of(context).size.width;
 
     if (screenWidth < 830) {
-      widget3 = Container(
-          width: screenWidth > 530
-              ? screenWidth < 830
-                  ? 500
-                  : 360
-              : screenWidth,
+      widget3 = SizedBox(
+          width: screenWidth > 530 ? screenWidth * 0.82 : screenWidth,
           child: Stack(children: <Widget>[
             Align(
               alignment: Alignment.center,
@@ -667,7 +691,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 style: TextStyle(
                     fontWeight: FontWeight.w700,
                     color: Colors.white,
-                    fontSize: 32),
+                    fontSize: screenWidth > 530 ? 38 : 32),
               ),
             ),
             Align(
@@ -675,15 +699,15 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 child: GestureDetector(
                   onTap: () {
                     pageViewController.nextPage(
-                        duration: Duration(milliseconds: 300),
+                        duration: const Duration(milliseconds: 300),
                         curve: Curves.ease);
                   },
                   child: Padding(
                     padding: EdgeInsets.only(
-                        top: 13,
+                        top: screenWidth > 530 ? 12 : 8,
                         right: screenWidth > 530 ? 15 : screenWidth * 0.048),
                     child: Container(
-                      child: SizedBox(
+                      child: const SizedBox(
                         width: 23,
                         height: 23,
                         child: Image(
@@ -699,10 +723,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       widget3 = Container(
         width: double.infinity,
         color: Colors.white24,
-        padding: EdgeInsets.symmetric(horizontal: 60, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 6),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
+          children: const <Widget>[
             Text(
               "Confab",
               textAlign: TextAlign.center,
@@ -712,22 +736,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   fontSize: 26),
             ),
             Spacer(),
-            Icon(
-              Icons.info_outline,
-              size: 30,
-              color: Colors.white,
-            ),
-            SizedBox(
-              width: 6,
-            ),
-            Text(
-              "Learn More",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                  fontSize: 17),
-            ),
           ],
         ),
       );
@@ -762,28 +770,36 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     // ),
                     Column(
                       mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: screenWidth > 830
+                      crossAxisAlignment: screenWidth >= 830
                           ? CrossAxisAlignment.start
                           : CrossAxisAlignment.center,
                       children: <Widget>[
                         SizedBox(
-                          height: screenWidth > 830 ? 0 : 15,
+                          height: screenWidth >= 830
+                              ? 0
+                              : screenWidth > 530
+                                  ? 20
+                                  : 15,
                           width: double.infinity,
                         ),
                         widget3,
                         SizedBox(
-                          height: screenWidth > 830 ? 32 : 12,
+                          height: screenWidth >= 830
+                              ? 32
+                              : screenWidth > 530
+                                  ? 30
+                                  : 12,
                         ),
                         SizedBox(
                           width: double.infinity,
                           child: Row(
-                            mainAxisAlignment: screenWidth > 830
+                            mainAxisAlignment: screenWidth >= 830
                                 ? MainAxisAlignment.start
                                 : MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               SizedBox(
-                                width: screenWidth > 830 ? 60 : 0,
+                                width: screenWidth >= 830 ? 60 : 0,
                               ),
                               PopupMenuButton<int>(
                                 enableFeedback: haptic,
@@ -804,6 +820,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                         menuColor3 = Colors.black54;
                                         menuColor4 = Colors.black54;
                                         menuColor5 = Colors.black54;
+                                        menuColor6 = Colors.black54;
                                       });
                                       break;
                                     case 2:
@@ -813,6 +830,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                         menuColor3 = Colors.black54;
                                         menuColor4 = Colors.black54;
                                         menuColor5 = Colors.black54;
+                                        menuColor6 = Colors.black54;
                                       });
                                       break;
                                     case 3:
@@ -822,6 +840,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                         menuColor3 = Colors.black;
                                         menuColor4 = Colors.black54;
                                         menuColor5 = Colors.black54;
+                                        menuColor6 = Colors.black54;
                                       });
                                       break;
                                     case 4:
@@ -831,6 +850,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                         menuColor3 = Colors.black54;
                                         menuColor4 = Colors.black;
                                         menuColor5 = Colors.black54;
+                                        menuColor6 = Colors.black54;
                                       });
                                       break;
                                     case 5:
@@ -840,6 +860,17 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                         menuColor3 = Colors.black54;
                                         menuColor4 = Colors.black54;
                                         menuColor5 = Colors.black;
+                                        menuColor6 = Colors.black54;
+                                      });
+                                      break;
+                                    case 6:
+                                      setState(() {
+                                        menuColor1 = Colors.black54;
+                                        menuColor2 = Colors.black54;
+                                        menuColor3 = Colors.black54;
+                                        menuColor4 = Colors.black54;
+                                        menuColor5 = Colors.black54;
+                                        menuColor6 = Colors.black;
                                       });
                                       break;
                                   }
@@ -848,7 +879,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                 shape: const RoundedRectangleBorder(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(8.0))),
-                                padding: EdgeInsets.only(left: 10, right: 100),
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 100),
                                 itemBuilder: (context) => [
                                   PopupMenuItem(
                                     value: 1,
@@ -862,7 +894,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                   ),
                                   PopupMenuItem(
                                       value: 2,
-                                      child: Container(
+                                      child: SizedBox(
                                         width: screenWidth * 0.27,
                                         child: Text(
                                           "Casual",
@@ -902,17 +934,27 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                           color: menuColor5),
                                     ),
                                   ),
+                                  PopupMenuItem(
+                                    value: 6,
+                                    child: Text(
+                                      "Random",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                          color: menuColor5),
+                                    ),
+                                  ),
                                 ],
                                 initialValue: 1,
-                                offset: Offset(0, 74),
+                                offset: const Offset(0, 74),
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                       horizontal: 14.9, vertical: 15.5),
                                   decoration: const BoxDecoration(
                                       color: Colors.white24,
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(10))),
-                                  child: SizedBox(
+                                  child: const SizedBox(
                                     width: 23,
                                     height: 23,
                                     child: Image(
@@ -923,7 +965,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                   ),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 12,
                               ),
                               Container(
@@ -936,13 +978,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                   color: Colors.transparent,
                                   width: screenWidth > 530
                                       ? screenWidth < 830
-                                          ? 395
-                                          : 457
-                                      : 0.75 *
-                                          MediaQuery.of(context).size.width,
+                                          ? (screenWidth * 0.82 - 100)
+                                          : 542
+                                      : (screenWidth - 100),
                                   child: Center(
                                     child: TabBar(
-                                      physics: BouncingScrollPhysics(),
+                                      physics: const BouncingScrollPhysics(),
                                       onTap: (value) {
                                         if (value == (activeVal - 1)) return;
                                         activeVal = value + 1;
@@ -950,7 +991,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                         setBgColor();
                                         updateMenu(value + 1);
                                       },
-                                      tabs: [
+                                      tabs: const [
                                         Tab(
                                             height: 50,
                                             child: Text(
@@ -987,6 +1028,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                               fontWeight: FontWeight.w700,
                                               fontSize: 18),
                                         )),
+                                        Tab(
+                                            child: Text(
+                                          "Random",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 18),
+                                        )),
                                       ],
                                       unselectedLabelColor: Colors.white70,
                                       indicatorColor: Colors.white,
@@ -995,8 +1043,16 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                       indicatorWeight: 3.0,
                                       isScrollable: true,
                                       labelPadding: EdgeInsets.only(
-                                          left: screenWidth > 830 ? 20 : 14,
-                                          right: screenWidth > 830 ? 20 : 14),
+                                          left: screenWidth >= 830
+                                              ? 20
+                                              : screenWidth > 530
+                                                  ? 20
+                                                  : 14,
+                                          right: screenWidth >= 830
+                                              ? 20
+                                              : screenWidth > 530
+                                                  ? 20
+                                                  : 14),
                                       controller: _tabController,
                                     ),
                                   ),
@@ -1006,7 +1062,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           ),
                         ),
                         SizedBox(
-                          height: 10,
+                          height: (screenWidth > 530 && screenWidth < 830)
+                              ? 20
+                              : 10,
                         ),
                         Expanded(
                           child: Scrollbar(
@@ -1015,16 +1073,16 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             child: SingleChildScrollView(
                               controller: myScrollController,
                               scrollDirection: Axis.vertical,
-                              physics: BouncingScrollPhysics(),
+                              physics: const BouncingScrollPhysics(),
                               child: Container(
                                 color: bgColor,
                                 width: screenWidth > 530
                                     ? screenWidth < 830
-                                        ? 500
+                                        ? screenWidth * 0.82
                                         : screenWidth * 0.85
                                     : double.infinity,
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: screenWidth > 830 ? 60 : 20,
+                                    horizontal: screenWidth >= 830 ? 60 : 20,
                                     vertical: 0),
                                 child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -1032,34 +1090,53 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
                                       GestureDetector(
-                                        onLongPress: () {
-                                          _pc.open();
+                                        onTap: () async {
+                                          await Clipboard.setData(ClipboardData(
+                                              text:
+                                                  "${curQuestion['text']}\n\nGenerated using Confab.\nCheck it out at www.confab.me"));
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            duration: const Duration(
+                                                milliseconds: 1000),
+                                            backgroundColor: Colors.white,
+                                            content: Text(
+                                              'Copied to clipboard.',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontFamily: 'Lato',
+                                                  fontSize: 16,
+                                                  color: bgColor),
+                                            ),
+                                          ));
                                         },
-                                        child: AutoSizeText(
-                                          (curQuestion['text']),
+                                        child: Text(
+                                          (curQuestion['text'].trim()),
                                           textAlign: TextAlign.left,
                                           style: TextStyle(
                                               height: 1.5,
                                               fontWeight: FontWeight.w700,
-                                              fontSize: 30,
+                                              fontSize: (screenWidth > 530 &&
+                                                      screenWidth < 830)
+                                                  ? 38
+                                                  : 30,
                                               color: Colors.white),
                                         ),
                                       ),
-                                      SizedBox(
-                                        height: 7,
+                                      const SizedBox(
+                                        height: 5,
                                       ),
-                                      Visibility(
-                                        visible: tipsState,
-                                        child: Text(
-                                          (curTip),
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              height: 1.5,
-                                              fontSize: 18.5,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      ),
+                                      // Visibility(
+                                      //   visible: tipsState,
+                                      //   child: Text(
+                                      //     (curTip),
+                                      //     textAlign: TextAlign.left,
+                                      //     style: const TextStyle(
+                                      //         color: Colors.white,
+                                      //         height: 1.5,
+                                      //         fontSize: 18.5,
+                                      //         fontWeight: FontWeight.w600),
+                                      //   ),
+                                      // ),
                                     ]),
                               ),
                             ),
@@ -1078,17 +1155,18 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       alignment: Alignment.center,
                       child: Visibility(
                         visible: isVisible,
-                        child: CircularProgressIndicator(color: Colors.white),
+                        child: const CircularProgressIndicator(
+                            color: Colors.white),
                       ),
                     ),
                     Align(
                       alignment: Alignment.bottomRight,
                       child: Visibility(
-                        visible: screenWidth > 830 ? true : false,
-                        child: Padding(
-                          padding: const EdgeInsets.all(40.0),
+                        visible: screenWidth >= 830 ? true : false,
+                        child: const Padding(
+                          padding: EdgeInsets.all(40.0),
                           child: Text(
-                            "© 2022 Dx2 Studios",
+                            "© TechBrig 2023",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
@@ -1107,10 +1185,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             renderPanelSheet: true,
             backdropEnabled: true,
             minHeight: 0,
-            maxHeight: 340,
+            maxHeight: 210,
             backdropColor: Colors.black,
             backdropOpacity: 0.65,
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20), topRight: Radius.circular(20)),
           )),
       settings(
@@ -1127,11 +1205,11 @@ class homeButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     widget = Container();
-    if (screenWidth > 830) {
+    if (screenWidth >= 830) {
       widget = Container(
         width: 120,
         height: 2,
-        margin: EdgeInsets.only(bottom: 50, left: 71, top: 4),
+        margin: const EdgeInsets.only(bottom: 50, left: 71, top: 4),
         color: Colors.white,
       );
     }
@@ -1139,7 +1217,7 @@ class homeButtons extends StatelessWidget {
     return Container(
       color: bgColor,
       child: Column(
-        crossAxisAlignment: screenWidth > 830
+        crossAxisAlignment: screenWidth >= 830
             ? CrossAxisAlignment.start
             : CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1147,14 +1225,14 @@ class homeButtons extends StatelessWidget {
         children: <Widget>[
           SizedBox(width: screenWidth),
           Container(
-            height: 60,
+            height: 65,
             width: screenWidth > 530
                 ? screenWidth < 830
-                    ? 540
+                    ? (screenWidth * 0.82 + 40)
                     : 550
                 : screenWidth,
             padding: EdgeInsets.only(
-                left: screenWidth > 830 ? 60 : 20,
+                left: screenWidth >= 830 ? 60 : 20,
                 right: 20,
                 bottom: 0,
                 top: 10),
@@ -1173,18 +1251,18 @@ class homeButtons extends StatelessWidget {
                             'images/shape.png',
                             color: bgColor,
                           ),
-                          SizedBox(width: 15),
+                          const SizedBox(width: 15),
                           Text(
                             'Generate New',
                             style: TextStyle(
                                 color: bgColor,
                                 fontSize: screenWidth > 412
                                     ? 20
-                                    : screenWidth * 0.05),
+                                    : screenWidth * 0.045),
                           )
                         ]),
                     style: ElevatedButton.styleFrom(
-                      fixedSize: Size(double.infinity, double.maxFinite),
+                      fixedSize: const Size(double.infinity, double.maxFinite),
                       elevation: 0.0,
                       shadowColor: Colors.transparent,
                       primary: Colors.white,
@@ -1194,7 +1272,7 @@ class homeButtons extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 GestureDetector(
@@ -1203,12 +1281,12 @@ class homeButtons extends StatelessWidget {
                   },
                   child: Container(
                     height: double.maxFinite,
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 14.8, vertical: 14.8),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14.8, vertical: 14.8),
                     decoration: const BoxDecoration(
                         color: Colors.white24,
                         borderRadius: BorderRadius.all(Radius.circular(12))),
-                    child: SizedBox(
+                    child: const SizedBox(
                       width: 23,
                       height: 23,
                       child: Image(
@@ -1232,23 +1310,24 @@ class homeButtons extends StatelessWidget {
               child: Container(
                 width: screenWidth > 530
                     ? screenWidth < 830
-                        ? 500
+                        ? screenWidth * 0.82
                         : 360
                     : screenWidth,
                 decoration: BoxDecoration(
-                    color:
-                        screenWidth > 830 ? Colors.transparent : Colors.white24,
-                    borderRadius: BorderRadius.all(Radius.circular(12))),
+                    color: screenWidth >= 830
+                        ? Colors.transparent
+                        : Colors.white24,
+                    borderRadius: const BorderRadius.all(Radius.circular(12))),
                 margin: EdgeInsets.only(
-                    left: screenWidth > 830 ? 0 : 20,
+                    left: screenWidth >= 830 ? 0 : 20,
                     top: 14,
                     right: 20,
-                    bottom: screenWidth > 830 ? 0 : 20),
+                    bottom: screenWidth >= 830 ? 0 : 20),
                 padding: EdgeInsets.only(
-                    left: screenWidth > 830 ? 0 : 15,
+                    left: screenWidth >= 830 ? 0 : 15,
                     right: 15,
-                    top: screenWidth > 830 ? 0 : 8,
-                    bottom: screenWidth > 830 ? 0 : 8),
+                    top: screenWidth >= 830 ? 0 : 8,
+                    bottom: screenWidth >= 830 ? 0 : 8),
                 child: MouseRegion(
                   cursor: SystemMouseCursors.click,
                   child: Row(
@@ -1263,10 +1342,10 @@ class homeButtons extends StatelessWidget {
                                   screenWidth > 412 ? 20 : screenWidth * 0.05,
                               fontWeight: FontWeight.w600),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 4,
                         ),
-                        Icon(
+                        const Icon(
                           Icons.arrow_forward_rounded,
                           color: Colors.white,
                         )

@@ -35,8 +35,10 @@ class _FormPageState extends State<FormPage> {
         docRef = "debate";
       } else if (selectedValue == "Party") {
         docRef = "party";
-      } else {
+      } else if (selectedValue == "Deep") {
         docRef = "deep";
+      } else if (selectedValue == "Random") {
+        docRef = "random";
       }
       hasNetwork().then((value) {
         if (value) {
@@ -165,7 +167,7 @@ class _FormPageState extends State<FormPage> {
   }
 
   String? selectedValue;
-  List<String> items = ['Casual', 'Debate', 'Deep', 'Party'];
+  List<String> items = ['Casual', 'Debate', 'Deep', 'Party', 'Random'];
   TextEditingController qController = new TextEditingController();
 
   List<DropdownMenuItem<String>> _addDividersAfterItems(List items, value) {
@@ -173,10 +175,11 @@ class _FormPageState extends State<FormPage> {
     var color = Colors.black38;
     List<DropdownMenuItem<String>> _menuItems = [];
     for (var item in items) {
-      if (items.indexOf(item) == index)
+      if (items.indexOf(item) == index) {
         color = Colors.black;
-      else
+      } else {
         color = Colors.black45;
+      }
       _menuItems.add(DropdownMenuItem<String>(
         value: item,
         child: Text(
@@ -214,42 +217,27 @@ class _FormPageState extends State<FormPage> {
   Widget build(BuildContext context) {
     widget1 = Container();
     screenWidth = MediaQuery.of(context).size.width;
-    if (screenWidth > 830)
+    if (screenWidth >= 830) {
       widget1 = Container(
         width: double.infinity,
         color: Colors.white24,
         padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 6),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            const Text(
+          children: const <Widget>[
+            Text(
               "Confab",
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                   fontSize: 26),
             ),
-            const Spacer(),
-            const Icon(
-              Icons.info_outline,
-              size: 30,
-              color: Colors.white,
-            ),
-            const SizedBox(
-              width: 6,
-            ),
-            const Text(
-              "Learn More",
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                  fontSize: 17),
-            ),
+            Spacer(),
           ],
         ),
       );
+    }
     return WillPopScope(
         onWillPop: () {
           setState(() {
@@ -279,8 +267,8 @@ class _FormPageState extends State<FormPage> {
                         physics: const BouncingScrollPhysics(),
                         child: Container(
                           padding: EdgeInsets.only(
-                              left: screenWidth > 830 ? 0 : 21,
-                              right: screenWidth > 830 ? 0 : 21),
+                              left: screenWidth >= 830 ? 0 : 21,
+                              right: screenWidth >= 830 ? 0 : 21),
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -293,7 +281,7 @@ class _FormPageState extends State<FormPage> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   SizedBox(
-                                    width: screenWidth > 830 ? 60 : 0,
+                                    width: screenWidth >= 830 ? 60 : 0,
                                   ),
                                   GestureDetector(
                                     onTap: () {
@@ -328,7 +316,7 @@ class _FormPageState extends State<FormPage> {
                               ),
                               Padding(
                                 padding: EdgeInsets.only(
-                                    left: screenWidth > 830 ? 60 : 0),
+                                    left: screenWidth >= 830 ? 60 : 0),
                                 child: const Text(
                                   "Suggest stuff to talk about in any social situation you can think of!",
                                   style: const TextStyle(
@@ -342,7 +330,7 @@ class _FormPageState extends State<FormPage> {
                               ),
                               Padding(
                                 padding: EdgeInsets.only(
-                                    left: screenWidth > 830 ? 60 : 0),
+                                    left: screenWidth >= 830 ? 60 : 0),
                                 child: const Text(
                                   "Category",
                                   textAlign: TextAlign.left,
@@ -357,7 +345,7 @@ class _FormPageState extends State<FormPage> {
                               ),
                               Padding(
                                 padding: EdgeInsets.only(
-                                    left: screenWidth > 830 ? 60 : 0),
+                                    left: screenWidth >= 830 ? 60 : 0),
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButton2(
                                     hint: const DropdownMenuItem<String>(
@@ -388,8 +376,8 @@ class _FormPageState extends State<FormPage> {
                                     ),
                                     buttonPadding: const EdgeInsets.only(
                                         left: 20, right: 20),
-                                    buttonHeight: screenWidth > 830 ? 40 : 50,
-                                    buttonWidth: screenWidth > 830
+                                    buttonHeight: screenWidth >= 830 ? 40 : 50,
+                                    buttonWidth: screenWidth >= 830
                                         ? screenWidth * 0.35
                                         : double.infinity,
                                     itemHeight: 40,
@@ -415,11 +403,11 @@ class _FormPageState extends State<FormPage> {
                                 ),
                               ),
                               SizedBox(
-                                height: screenWidth > 830 ? 25 : 15,
+                                height: screenWidth >= 830 ? 25 : 15,
                               ),
                               Padding(
                                 padding: EdgeInsets.only(
-                                    left: screenWidth > 830 ? 60 : 0),
+                                    left: screenWidth >= 830 ? 60 : 0),
                                 child: const Text(
                                   "Question",
                                   textAlign: TextAlign.left,
@@ -433,18 +421,18 @@ class _FormPageState extends State<FormPage> {
                                 height: 13,
                               ),
                               Container(
-                                width: screenWidth > 830
+                                width: screenWidth >= 830
                                     ? screenWidth * 0.6
                                     : double.infinity,
                                 margin: EdgeInsets.only(
-                                    left: screenWidth > 830 ? 60 : 0),
+                                    left: screenWidth >= 830 ? 60 : 0),
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 18, vertical: 19),
                                 decoration: const BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(10))),
-                                height: screenWidth > 830
+                                height: screenWidth >= 830
                                     ? MediaQuery.of(context).size.height < 645
                                         ? MediaQuery.of(context).size.height *
                                             0.041 *
@@ -474,13 +462,13 @@ class _FormPageState extends State<FormPage> {
                                 ),
                               ),
                               SizedBox(
-                                height: screenWidth > 830
+                                height: screenWidth >= 830
                                     ? MediaQuery.of(context).size.height * 0.1
                                     : MediaQuery.of(context).size.height * 0.08,
                               ),
                               Container(
                                 margin: EdgeInsets.only(
-                                    left: screenWidth > 830 ? 60 : 0),
+                                    left: screenWidth >= 830 ? 60 : 0),
                                 child: ElevatedButton(
                                   onPressed: () {
                                     submitClicked();
@@ -496,7 +484,7 @@ class _FormPageState extends State<FormPage> {
                                     primary: Colors.white,
                                     splashFactory: NoSplash.splashFactory,
                                     minimumSize: Size(
-                                        screenWidth > 830
+                                        screenWidth >= 830
                                             ? 300
                                             : MediaQuery.of(context)
                                                     .size
@@ -516,7 +504,7 @@ class _FormPageState extends State<FormPage> {
                               Visibility(
                                   visible: isError,
                                   child: Row(
-                                    mainAxisAlignment: screenWidth > 830
+                                    mainAxisAlignment: screenWidth >= 830
                                         ? MainAxisAlignment.start
                                         : MainAxisAlignment.center,
                                     crossAxisAlignment:
@@ -524,7 +512,7 @@ class _FormPageState extends State<FormPage> {
                                     mainAxisSize: MainAxisSize.max,
                                     children: <Widget>[
                                       SizedBox(
-                                        width: screenWidth > 830 ? 60 : 0,
+                                        width: screenWidth >= 830 ? 60 : 0,
                                       ),
                                       const Icon(Icons.error_outline_rounded,
                                           color: Colors.white),
@@ -555,7 +543,7 @@ class _FormPageState extends State<FormPage> {
                     Align(
                       alignment: Alignment.bottomRight,
                       child: Visibility(
-                        visible: screenWidth > 830 ? true : false,
+                        visible: screenWidth >= 830 ? true : false,
                         child: const Padding(
                           padding: EdgeInsets.all(40.0),
                           child: Text(
@@ -616,8 +604,8 @@ class _SuccessPageState extends State<SuccessPage> {
         padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 6),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            const Text(
+          children: const <Widget>[
+            Text(
               "Confab",
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -625,23 +613,7 @@ class _SuccessPageState extends State<SuccessPage> {
                   color: Colors.white,
                   fontSize: 26),
             ),
-            const Spacer(),
-            const Icon(
-              Icons.info_outline,
-              size: 30,
-              color: Colors.white,
-            ),
-            const SizedBox(
-              width: 6,
-            ),
-            const Text(
-              "Learn More",
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                  fontSize: 17),
-            ),
+            Spacer(),
           ],
         ),
       );
@@ -650,7 +622,7 @@ class _SuccessPageState extends State<SuccessPage> {
     var ht = MediaQuery.of(context).size.height;
 
     Widget widget1 = Container();
-    if (MediaQuery.of(context).size.width > 830)
+    if (MediaQuery.of(context).size.width >= 830) {
       widget1 = Container(
         margin: const EdgeInsets.only(top: 26),
         child: Padding(
@@ -727,6 +699,7 @@ class _SuccessPageState extends State<SuccessPage> {
           ]),
         ),
       );
+    }
 
     return WillPopScope(
       onWillPop: () {
@@ -751,7 +724,7 @@ class _SuccessPageState extends State<SuccessPage> {
                 left: 0,
                 right: 0,
                 top: ht > 710
-                    ? MediaQuery.of(context).size.width > 830
+                    ? MediaQuery.of(context).size.width >= 830
                         ? ht * 0.28
                         : ht * 0.35
                     : ht < 614
@@ -785,7 +758,7 @@ class _SuccessPageState extends State<SuccessPage> {
                 alignment: Alignment.bottomCenter,
                 child: Visibility(
                   visible:
-                      MediaQuery.of(context).size.width > 830 ? false : true,
+                      MediaQuery.of(context).size.width >= 830 ? false : true,
                   child: Padding(
                     padding: const EdgeInsets.only(
                         left: 21, right: 21, top: 0, bottom: 30),
